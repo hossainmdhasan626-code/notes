@@ -15,8 +15,8 @@
 // 2. PRIMITIVE TYPES (Pass by Value & Immutable)
 // -------------------------------------------------------------------------
 
-const myString = "Hasan Mahmud";    // String
-const myNumber = 28;                // Number (Integer/Float)
+const myString = "Hasan Mahmud";   // String
+const myNumber = 28;               // Number (Integer/Float)
 const myBool = true;               // Boolean
 const myUndefined = undefined;     // Undefined (মান দেওয়া হয়নি)
 const myNull = null;               // Null (ইচ্ছা করে খালি রাখা)
