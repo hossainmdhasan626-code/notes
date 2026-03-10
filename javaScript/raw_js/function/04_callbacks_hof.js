@@ -72,3 +72,64 @@ console.log("Result of Subtraction:", doMath(20, 10, sub)); // ১০
  * - এটি কোডকে Reusable করে (একই doMath ফাংশন হাজার রকম কাজ করতে পারে)।
  * - এটি ছাড়া Array Methods (map, filter) বোঝা অসম্ভব।
  */
+
+/**
+ * ৭. Callback Hell (The Problem Section)
+ * এটি মূলত অ্যাসিনক্রোনাস (Async) কোডে ঘটে। যখন একটি কাজের ভেতর আরেকটি কলব্যাক দিতে হয়, 
+ * তখন কোডটি দেখতে ডানের দিকে বেঁকে যায় এবং পিরামিডের মতো হয়ে যায়।
+ */
+
+// উদাহরণ: ইউজার ডাটা আনো -> তারপর তার পোস্ট আনো -> তারপর কমেন্ট আনো
+const getSocialData = () => {
+    setTimeout(() => {
+        console.log("1. User Data Loaded");
+        setTimeout(() => {
+            console.log("2. User Posts Loaded");
+            setTimeout(() => {
+                console.log("3. Post Comments Loaded");
+                // এভাবে চলতেই থাকলে একেই বলে Callback Hell বা Pyramid of Doom
+            }, 1000);
+        }, 1000);
+    }, 1000);
+};
+
+// সমাধান: এই সমস্যা থেকে বাঁচতেই জাভাস্ক্রিপ্টে Promises এবং Async/Await এসেছে।
+
+
+/**
+ * ৮. React/Next.js এ বাস্তব প্রয়োগ (Lifting State Up)
+ * রিয়্যাক্টে চাইল্ড থেকে প্যারেন্টে ডাটা পাঠানোর একমাত্র উপায় হলো কলব্যাক ফাংশন।
+ */
+
+// উদাহরণ ১: একটি সিম্পল সার্চ ফিল্ড (Child) যা প্যারেন্টকে ডাটা পাঠায়
+const SearchInput = ({ onSearch }) => {
+    return (
+        <input 
+            type="text" 
+            onChange={(e) => onSearch(e.target.value)} // এখানে onSearch একটি কলব্যাক
+            placeholder="Type something..."
+        />
+    );
+};
+
+// উদাহরণ ২: প্যারেন্ট কম্পোনেন্টে কলব্যাক রিসিভ করা
+const ParentPage = () => {
+    const handleSearch = (query) => {
+        console.log("Search query received in Parent:", query);
+    };
+
+    return (
+        <div>
+            <h1>My Store</h1>
+            <SearchInput onSearch={handleSearch} /> 
+            {/* handleSearch ফাংশনটিকে প্রপস হিসেবে পাঠিয়ে দেওয়া হলো */}
+        </div>
+    );
+};
+
+
+/**
+ * ৯. কেন রিয়্যাক্টে এটি গুরুত্বপূর্ণ? (The "Why")
+ * ১. রিয়্যাক্টে ডাটা একমুখী (One-way data flow)। নিচের দিক থেকে উপরে ডাটা পাঠাতে এই কলব্যাকই একমাত্র হাতিয়ার।
+ * ২. পারফরম্যান্স অপ্টিমাইজেশনে (useCallback) এটি সরাসরি কাজে লাগে।
+ */
