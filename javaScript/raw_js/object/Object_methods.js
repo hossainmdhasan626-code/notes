@@ -134,3 +134,6 @@ newObj.greet(); // "Hello!"
 // Example 2: নাল প্রোটোটাইপ অবজেক্ট (একদম ক্লিন অবজেক্ট)
 const cleanObj = Object.create(null);
 console.log(cleanObj.toString); // undefined
+
+
+
