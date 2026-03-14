@@ -27,8 +27,8 @@ const theDOMProblem = {
 */
 
 const reactProcessFlow = {
-    step1_VirtualDOM: "রিয়্যাক্ট রিয়েল DOM-এর একটি হালকা (Lightweight) কপি তৈরি করে, যাকে বলে Virtual DOM।",
-    step2_StateChange: "বাটনে ক্লিক করলে রিয়্যাক্ট সেই কপির ওপর ক্যালকুলেশন চালায়।",
+    step1_VirtualDOM: "রিয়্যাক্ট (Lightweight Dom ) তৈরি করে, যাকে বলে Virtual DOM।",
+    step2_StateChange: "বাটনে ক্লিক করলে রিয়্যাক্ট সেই VDOM ও আগের VDOM snap এর ওপর ক্যালকুলেশন চালায়।",
     step3_Diffing: "এখানে রিয়্যাক্ট **Diffing Algorithm** ব্যবহার করে আগের কপির সাথে বর্তমান কপির তুলনা করে।",
     step4_Reconciliation: "এই **Reconciliation** প্রক্রিয়ার মাধ্যমে রিয়্যাক্ট শুধু 'পরিবর্তিত' অংশটুকু খুঁজে বের করে।"
 };
@@ -99,6 +99,14 @@ const realDOMReality = {
 
 console.log("Virtual DOM (Plan) builds the Real DOM (Final Structure).");
 
+/**
+ * QUICK FLOW: VIRTUAL DOM
+ * -----------------------
+ * JSX -> Babel -> React Element (JS Object) -> Virtual DOM (Snapshot)
+ * * Update Triggered -> New Snapshot -> Diffing (Old vs New) 
+ * -> Reconciliation -> Real DOM (UI Update)
+ */
 
+const flowSecret = "Virtual DOM is JS's way to minimize the heavy work of Browser's C++ engine.";
 
 console.log("Hasan, your notes are successfully converted to a Professional JS Guide!");
