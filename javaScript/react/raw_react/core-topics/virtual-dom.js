@@ -63,4 +63,22 @@ const performanceLogic = {
   শুধু সুনির্দিষ্ট পরিবর্তনটুকু (Patching) রিয়েল ডোমকে জানায়। 
 */
 
+/**
+ * THE ORIGIN OF VIRTUAL DOM
+ * -------------------------
+ */
+
+const vdomConcept = {
+    ingredient: "React Element (The Object returned by Babel/React.createElement).",
+    structure: "A Tree of these Elements = Virtual DOM.",
+    process: "JSX -> Babel -> React Elements -> Virtual DOM Tree -> Real DOM."
+};
+
+/* হাসান, তোমার জন্য ইন্টারভিউ টিপস:
+   যদি কেউ জিজ্ঞেস করে 'ভার্চুয়াল ডোম কী দিয়ে তৈরি?', 
+   সরাসরি বলবে: 'এটি রিয়্যাক্ট এলিমেন্ট বা জাভাস্ক্রিপ্ট অবজেক্ট দিয়ে তৈরি একটি ট্রি।'
+*/
+
+console.log("Virtual DOM is essentially a tree of React Elements.");
+
 console.log("Hasan, your notes are successfully converted to a Professional JS Guide!");
