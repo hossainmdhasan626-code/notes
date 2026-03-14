@@ -65,22 +65,20 @@ const performanceLogic = {
 */
 
 /**
- * THE ORIGIN OF VIRTUAL DOM
- * -------------------------
+ * HOW OBJECTS BECOME VIRTUAL DOM
+ * ------------------------------
  */
 
-const vdomConcept = {
-    ingredient: "React Element (The Object returned by Babel/React.createElement).",
-    structure: "A Tree of these Elements = Virtual DOM.",
-    process: "JSX -> Babel -> React Elements -> Virtual DOM Tree -> Real DOM."
+const mechanism = {
+    step_1: "React.createElement() একটি ভ্যানিলা জেএস অবজেক্ট রিটার্ন করে।",
+    step_2: "কম্পোনেন্ট নেস্টিং এর কারণে একটি অবজেক্টের 'children' প্রপার্টিতে আরও অবজেক্ট যোগ হয়।",
+    step_3: "এই নেস্টেড অবজেক্টগুলো মিলে মেমোরিতে একটি 'Map' বা 'Tree' তৈরি করে।",
+    result: "এই ভ্যানিলা জেএস অবজেক্ট ট্রি-টিই হলো Virtual DOM।"
 };
 
-/* হাসান, তোমার জন্য ইন্টারভিউ টিপস:
-   যদি কেউ জিজ্ঞেস করে 'ভার্চুয়াল ডোম কী দিয়ে তৈরি?', 
-   সরাসরি বলবে: 'এটি রিয়্যাক্ট এলিমেন্ট বা জাভাস্ক্রিপ্ট অবজেক্ট দিয়ে তৈরি একটি ট্রি।'
+/* হাসান, এক কথায়: 
+   React Element হলো ইটের মতো, আর ভার্চুয়াল ডোম হলো সেই ইট দিয়ে বানানো একটা দালানের নকশা (Blueprint)।
 */
-
-console.log("Virtual DOM is essentially a tree of React Elements.");
 
 /**
  * WHAT IS THE REAL DOM MADE OF?
