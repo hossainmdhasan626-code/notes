@@ -33,21 +33,6 @@ const reactProcessFlow = {
     step4_Reconciliation: "পুরানো কপির সাথে নতুন কপির তুলনা করে সুনির্দিষ্ট পরিবর্তনগুলো আসল ডোম-এ অ্যাপ্লাই করার যে অ্যালগরিদম বা প্রসেস, তাকেই বলে Reconciliation"
 };
 
-/**
- * THE FINAL CLARITY: DIFFING vs RECONCILIATION
- * -------------------------------------------
- */
-
-const clarity = {
-    diffing: "The logic to calculate the difference between two trees (Identifying the changes).",
-    reconciliation: "The entire process of keeping the Real DOM in sync with the Virtual DOM (Executing the changes)."
-};
-
-/* হাসান, তোমার আগের নোটে Step 4 টা এভাবে আপডেট করো:
-   step4_Reconciliation: "এই প্রক্রিয়ার মাধ্যমে রিয়্যাক্ট Diffing-এর রেজাল্ট ব্যবহার করে রিয়েল DOM-কে আপডেট করে।" 
-*/
-
-console.log("Hasan, thank you for catching that! Now the note is technically bulletproof.");
 
 /* ৩. ডিফিং এবং রিকনসিলিয়েশন (The Big Two Words):
   ---------------------------------------------
