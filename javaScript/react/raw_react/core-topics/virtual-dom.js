@@ -26,11 +26,21 @@ const theDOMProblem = {
   ইউজার বাটনে ক্লিক করলে রিয়্যাক্ট সরাসরি রিয়েল DOM-এ যায় না।
 */
 
-const reactProcessFlow = {
-    step1_VirtualDOM: "রিয়্যাক্ট (Lightweight Dom/Js object/Snap/Map) তৈরি করে, যাকে বলে Virtual DOM।",
-    step2_StateChange: "বাটনে ক্লিক করলে রিয়্যাক্ট সেই VDOM ও আগের VDOM snap এর ওপর ক্যালকুলেশন চালায়।",
-    step3_Diffing: "এখানে রিয়্যাক্ট **Diffing Algorithm** ব্যবহার করে আগের কপির সাথে বর্তমান কপির তুলনা করে।",
-    step4_Reconciliation: "পুরানো কপির সাথে নতুন কপির তুলনা করে সুনির্দিষ্ট পরিবর্তনগুলো আসল ডোম-এ অ্যাপ্লাই করার যে অ্যালগরিদম বা প্রসেস, তাকেই বলে Reconciliation"
+const reactCompleteWorkflow = {
+    // ধাপ ১: ব্লুপ্রিন্ট তৈরি (Creation)
+    step1_Element: "React.createElement() ফাংশন কল হয় এবং এটি মেমোরিতে একটি ভ্যানিলা JS Object (React Element) তৈরি করে।",
+
+    // ধাপ ২: ম্যাপ বা ট্রি তৈরি (Virtual DOM)
+    step2_VirtualDOM: "এই এলিমেন্ট অবজেক্টগুলো একটার সাথে একটা যুক্ত হয়ে মেমোরিতে একটি পূর্ণাঙ্গ অবজেক্ট ট্রি বা Virtual DOM তৈরি করে।",
+
+    // ধাপ ৩: রেন্ডারিং (Initial Render)
+    step3_Rendering: "ReactDOM এই ভার্চুয়াল ডোম অবজেক্টগুলো দেখে দেখে প্রথমবারের মতো আসল HTML (Real DOM) তৈরি করে স্ক্রিনে দেখায়।",
+
+    // ধাপ ৪: পরিবর্তন শনাক্তকরণ (State/Props Change)
+    step4_Diffing: "যখনই ডাটা চেঞ্জ হয়, রিয়্যাক্ট নতুন একটি Virtual DOM snap তৈরি করে এবং 'Diffing Algorithm' দিয়ে পুরনো স্ন্যাপের সাথে তুলনা করে দেখে ঠিক কোথায় পরিবর্তন হয়েছে।",
+
+    // ধাপ ৫: ফাইনাল আপডেট (Reconciliation)
+    step5_Reconciliation: "পুরনো এবং নতুন ভার্চুয়াল ডোম-এর পার্থক্যের ওপর ভিত্তি করে রিয়্যাক্ট শুধুমাত্র ওই নির্দিষ্ট অংশটুকু আসল ডোম-এ আপডেট করে। এই পুরো প্রসেসটাই হলো Reconciliation।"
 };
 
 
