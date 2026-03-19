@@ -169,12 +169,78 @@ const handleAdd = (item) => {
  * - useState: "আমি জানি নতুন ভ্যালু কী হবে, তাই সরাসরি সেট করে দিচ্ছি।"
  * - useReducer: "আমি জানি কী 'অ্যাকশন' করতে হবে (যেমন: ADD), কিন্তু স্টেট কীভাবে বদলাবে তা Reducer ফাংশন ঠিক করবে।"
  */
+
 /**
- * ৮. useLayoutEffect (Pre-Paint Effect)
- * ------------------------------------
+ * ৮. useLayoutEffect (The Pre-Paint Inspector) - [ES6+]
+ * ----------------------------------------------------
  * IMPORT: import { useLayoutEffect } from 'react';
- * * - কাজ: useEffect এর মতোই, কিন্তু এটি স্ক্রিনে ছবি আঁকার (Paint) ঠিক আগে রান হয়।
- * - ইউনিক: লেআউট মেজারমেন্টের জন্য এটি সেরা।
+ * CONVENTION: useLayoutEffect(() => { ... }, [dependencies]);
+ */
+
+/**
+ * কেন এবং কখন ব্যবহার করবে? (When to use):
+ * --------------------------------------
+ * ১. যখন DOM এলিমেন্টের সাইজ বা পজিশন (Width, Height, Top, Left) মেপে কোনো লজিক চালাতে হয়।
+ * ২. যখন স্ক্রিনে কোনো এলিমেন্ট দেখানোর আগেই তার জায়গা পরিবর্তন করতে হয় (Visual Updates)।
+ * ৩. যদি useEffect ব্যবহার করলে ইউজার স্ক্রিনে একবার ভুল পজিশন দেখে আবার সঠিক পজিশন দেখে (Flickering)।
+ */
+
+
+
+/**
+ * ডিটেইলড ইউজ কেস এবং পরিপূর্ণ উদাহরণ:
+ * -----------------------------------
+ * দৃশ্যপট (Scenario): ধরো তোমার একটি টুলটিপ (Tooltip) আছে যা একটি বাটনের উপরে বসবে। 
+ * টুলটিপটি কত বড় তার ওপর ভিত্তি করে তাকে বাটনের উপরে না নিচে বসাবে তা ঠিক করতে হবে।
+ */
+
+import React, { useState, useLayoutEffect, useRef } from 'react';
+
+function TooltipExample() {
+  const [tooltipHeight, setTooltipHeight] = useState(0);
+  const tooltipRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  // useEffect দিলে টুলটিপটি একবার নিচে দেখা যেত তারপর উপরে লাফ দিত।
+  // useLayoutEffect ব্যবহারের ফলে ব্রাউজার স্ক্রিনে দেখানোর আগেই হিসাব শেষ করে ফেলে।
+  useLayoutEffect(() => {
+    if (tooltipRef.current) {
+      // ১. DOM থেকে টুলটিপের সঠিক উচ্চতা মেপে নেওয়া (Measurement)
+      const { height } = tooltipRef.current.getBoundingClientRect();
+      setTooltipHeight(height);
+      
+      // ২. পজিশন ঠিক করা (Synchronous logic)
+      console.log("বক্সের উচ্চতা রেন্ডার হওয়ার আগেই সেট করা হলো:", height);
+    }
+  }, []); // শুধু প্রথমবার মাউন্ট হওয়ার সময় চলবে
+
+  return (
+    <div style={{ padding: '100px' }}>
+      <button ref={buttonRef}>আমার ওপর মাউস ধরো</button>
+      
+      {/* টুলটিপ যা স্ক্রিনে দেখানোর আগে উচ্চতা মেপে পজিশন ঠিক করা হচ্ছে */}
+      <div 
+        ref={tooltipRef} 
+        style={{ 
+          position: 'absolute', 
+          top: `-${tooltipHeight}px`, // উচ্চতা অনুযায়ী উপরে উঠে যাচ্ছে
+          background: 'black', 
+          color: 'white',
+          padding: '10px'
+        }}
+      >
+        আমি একটি ডাইনামিক টুলটিপ!
+      </div>
+    </div>
+  );
+}
+
+/**
+ * হাসান'স প্রো-টিপ (সতর্কতা):
+ * -------------------------
+ * - এটি 'Synchronous' হওয়ায় এটি শেষ না হওয়া পর্যন্ত ব্রাউজার স্ক্রিন আপডেট করে না। 
+ * - তাই এখানে বড় কোনো 'API Call' বা 'Heavy Loop' চালানো যাবে না। 
+ * - সাধারণ রুল: যদি কোনো ভিজ্যুয়াল বাগ বা ফ্লিকারিং (Flickering) না হয়, তবে সবসময় useEffect-ই ব্যবহার করো।
  */
 
 /**
