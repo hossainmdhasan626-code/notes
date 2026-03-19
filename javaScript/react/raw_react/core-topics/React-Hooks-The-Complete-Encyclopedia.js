@@ -29,6 +29,21 @@
  * - এটি 'Asynchronous' ভাবে কাজ করে, তাই সরাসরি স্টেটের পরেই নতুন ভ্যালু কনসোল করলে পুরনোটা দেখা যায়।
  */
 
+/**
+ * INITIAL STATE / DEFAULT VALUE (Deep Dive):
+ * -----------------------------------------
+ * - useState("") -> এখানে ব্র্যাকেটের ভেতরের অংশটি হলো 'Initial Value'।
+ * - এটি শুধুমাত্র কম্পোনেন্টের প্রথম রেন্ডারে (Initial Render) ব্যবহৃত হয়।
+ * - ডাটা টাইপ: এখানে তুমি যেকোনো ধরণের জাভাস্ক্রিপ্ট ডাটা টাইপ রাখতে পারো:
+ * ১. Primitive: string, number, boolean (যেমন: useState(0), useState(true))
+ * ২. Complex: object, array (যেমন: useState([]), useState({ name: "Hasan" }))
+ * ৩. Null/Undefined: যদি শুরুতে কোনো ডাটা না থাকে (useState(null))
+ * * - প্রো-টিপ (Lazy Initialization): 
+ * যদি ইনিশিয়াল ভ্যালু বের করতে কোনো বড় ক্যালকুলেশন লাগে, তবে সরাসরি ভ্যালু না দিয়ে 
+ * একটি ফাংশন দেওয়া যায়: useState(() => heavyCalculation())। 
+ * এতে প্রতি রি-রেন্ডারে ওই ক্যালকুলেশন আর হবে না, শুধু প্রথমবার হবে।
+ */
+
 const [name, setName] = useState(""); // Example 1
 const [isOpen, setIsOpen] = useState(false); // Example 2
 
