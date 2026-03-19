@@ -123,14 +123,52 @@ const inputRef = useRef(null);
 // ------------------------------------------------------------------------
 
 /**
- * ৭. useReducer (Complex State)
- * ----------------------------
+ * ৭. useReducer (The State Engine) - [ES6+]
+ * ----------------------------------------
  * IMPORT: import { useReducer } from 'react';
  * CONVENTION: const [state, dispatch] = useReducer(reducer, initialState);
- * * - কাজ: যখন অনেকগুলো স্টেট একসাথে হ্যান্ডেল করতে হয় (Redux এর মতো)।
+ * * উপাদানসমূহ (Components):
+ * ১. initialState: স্টেটের শুরুর মান (যেমন: খালি অ্যারে [] বা অবজেক্ট {})।
+ * ২. reducer: এটি একটি মাস্টার ফাংশন যা ঠিক করে স্টেট "কীভাবে" আপডেট হবে।
+ * ৩. dispatch: এটি একটি সিগন্যাল পাঠানোর ফাংশন যা দিয়ে আমরা রিয়্যাক্টকে বলি "কী করতে হবে"।
+ * * - কাজ: যখন একটি স্টেটের ভেতর অনেক ধরণের কাজ (Actions) থাকে এবং লজিক জটিল হয়।
+ * - সুবিধা: এটি স্টেট আপডেটের সব হিসাব-নিকাশ কম্পোনেন্টের বাইরে নিয়ে যায়, ফলে কোড পরিষ্কার থাকে।
+ * * * * REAL PROJECT USE CASE (Shopping Cart):
+ * * USE CASE 1: কার্টে নতুন প্রোডাক্ট যোগ করা (Add Item)।
+ * * USE CASE 2: কার্ট থেকে কোনো প্রোডাক্ট মুছে ফেলা (Remove Item)।
+ * * USE CASE 3: পুরো কার্ট একবারে খালি করা (Clear Cart)।
  */
-const [state, dispatch] = useReducer(reducer, initialState);
 
+// --- ১. Reducer Logic (এটি সাধারণত কম্পোনেন্টের বাইরে থাকে) ---
+const cartReducer = (state, action) => {
+  switch (action.type) {
+    case 'ADD_TO_CART':
+      return [...state, action.payload]; // নতুন ডেটা যোগ হলো
+    case 'REMOVE_ITEM':
+      return state.filter(item => item.id !== action.payload.id); // ফিল্টার করে বাদ দেওয়া হলো
+    case 'RESET':
+      return []; // স্টেট খালি করা হলো
+    default:
+      return state; // কোনো অ্যাকশন না মিললে বর্তমান স্টেট থাকবে
+  }
+};
+
+// --- ২. কম্পোনেন্টের ভেতর ব্যবহার (Example) ---
+/*
+const [cart, dispatch] = useReducer(cartReducer, []);
+
+const handleAdd = (item) => {
+  // dispatch মানে হলো সিগন্যাল পাঠানো
+  dispatch({ type: 'ADD_TO_CART', payload: item });
+};
+*/
+
+/**
+ * ইউনিক পার্থক্য (useState vs useReducer):
+ * --------------------------------------
+ * - useState: "আমি জানি নতুন ভ্যালু কী হবে, তাই সরাসরি সেট করে দিচ্ছি।"
+ * - useReducer: "আমি জানি কী 'অ্যাকশন' করতে হবে (যেমন: ADD), কিন্তু স্টেট কীভাবে বদলাবে তা Reducer ফাংশন ঠিক করবে।"
+ */
 /**
  * ৮. useLayoutEffect (Pre-Paint Effect)
  * ------------------------------------
