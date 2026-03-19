@@ -152,7 +152,16 @@ console.log("End");
 // - নিয়ম: মাইক্রোটাস্ক কিউ খালি হওয়ার পর ব্রাউজার চেক করে স্ক্রিন আপডেট করার সময় হয়েছে কি না। 
 //   যদি হয়, তবে সে রেন্ডার কিউ-এর কাজ সেরে ফেলে।
 
-
+/**
+ * Render Queue এর ভেতর যা থাকে:
+ * ১. requestAnimationFrame (অ্যানিমেশন লজিক)
+ * ২. Style Calculation (CSS অ্যাপ্লাই করা)
+ * ৩. Layout/Reflow (কার সাইজ কত, কে কোথায় বসবে)
+ * ৪. Paint (পিক্সেল আঁকা)
+ * ৫. Composite (লেয়ার সাজানো)
+ * * ইভেন্ট লুপের নিয়ম: 
+ * Stack Empty -> Microtasks Empty -> Render Queue (যদি ১৬.৬ms পার হয়) -> Task Queue।
+ */
 
 // ৭.৪. CALLBACK / TASK QUEUE (The Commoners): 
 // - এর মধ্যে থাকে: setTimeout, setInterval, setImmediate, I/O tasks।
