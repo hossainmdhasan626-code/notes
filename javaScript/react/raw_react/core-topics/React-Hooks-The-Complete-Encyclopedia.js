@@ -38,9 +38,9 @@
  * ১. Primitive: string, number, boolean (যেমন: useState(0), useState(true))
  * ২. Complex: object, array (যেমন: useState([]), useState({ name: "Hasan" }))
  * ৩. Null/Undefined: যদি শুরুতে কোনো ডাটা না থাকে (useState(null))
- * * - প্রো-টিপ (Lazy Initialization): 
- * যদি ইনিশিয়াল ভ্যালু বের করতে কোনো বড় ক্যালকুলেশন লাগে, তবে সরাসরি ভ্যালু না দিয়ে 
- * একটি ফাংশন দেওয়া যায়: useState(() => heavyCalculation())। 
+ * * - প্রো-টিপ (Lazy Initialization):
+ * যদি ইনিশিয়াল ভ্যালু বের করতে কোনো বড় ক্যালকুলেশন লাগে, তবে সরাসরি ভ্যালু না দিয়ে
+ * একটি ফাংশন দেওয়া যায়: useState(() => heavyCalculation())।
  * এতে প্রতি রি-রেন্ডারে ওই ক্যালকুলেশন আর হবে না, শুধু প্রথমবার হবে।
  */
 
@@ -142,11 +142,11 @@ const inputRef = useRef(null);
 // --- ১. Reducer Logic (এটি সাধারণত কম্পোনেন্টের বাইরে থাকে) ---
 const cartReducer = (state, action) => {
   switch (action.type) {
-    case 'ADD_TO_CART':
+    case "ADD_TO_CART":
       return [...state, action.payload]; // নতুন ডেটা যোগ হলো
-    case 'REMOVE_ITEM':
-      return state.filter(item => item.id !== action.payload.id); // ফিল্টার করে বাদ দেওয়া হলো
-    case 'RESET':
+    case "REMOVE_ITEM":
+      return state.filter((item) => item.id !== action.payload.id); // ফিল্টার করে বাদ দেওয়া হলো
+    case "RESET":
       return []; // স্টেট খালি করা হলো
     default:
       return state; // কোনো অ্যাকশন না মিললে বর্তমান স্টেট থাকবে
@@ -185,16 +185,14 @@ const handleAdd = (item) => {
  * ৩. যদি useEffect ব্যবহার করলে ইউজার স্ক্রিনে একবার ভুল পজিশন দেখে আবার সঠিক পজিশন দেখে (Flickering)।
  */
 
-
-
 /**
  * ডিটেইলড ইউজ কেস এবং পরিপূর্ণ উদাহরণ:
  * -----------------------------------
- * দৃশ্যপট (Scenario): ধরো তোমার একটি টুলটিপ (Tooltip) আছে যা একটি বাটনের উপরে বসবে। 
+ * দৃশ্যপট (Scenario): ধরো তোমার একটি টুলটিপ (Tooltip) আছে যা একটি বাটনের উপরে বসবে।
  * টুলটিপটি কত বড় তার ওপর ভিত্তি করে তাকে বাটনের উপরে না নিচে বসাবে তা ঠিক করতে হবে।
  */
 
-import React, { useState, useLayoutEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useRef } from "react";
 
 function TooltipExample() {
   const [tooltipHeight, setTooltipHeight] = useState(0);
@@ -208,25 +206,25 @@ function TooltipExample() {
       // ১. DOM থেকে টুলটিপের সঠিক উচ্চতা মেপে নেওয়া (Measurement)
       const { height } = tooltipRef.current.getBoundingClientRect();
       setTooltipHeight(height);
-      
+
       // ২. পজিশন ঠিক করা (Synchronous logic)
       console.log("বক্সের উচ্চতা রেন্ডার হওয়ার আগেই সেট করা হলো:", height);
     }
   }, []); // শুধু প্রথমবার মাউন্ট হওয়ার সময় চলবে
 
   return (
-    <div style={{ padding: '100px' }}>
+    <div style={{ padding: "100px" }}>
       <button ref={buttonRef}>আমার ওপর মাউস ধরো</button>
-      
+
       {/* টুলটিপ যা স্ক্রিনে দেখানোর আগে উচ্চতা মেপে পজিশন ঠিক করা হচ্ছে */}
-      <div 
-        ref={tooltipRef} 
-        style={{ 
-          position: 'absolute', 
+      <div
+        ref={tooltipRef}
+        style={{
+          position: "absolute",
           top: `-${tooltipHeight}px`, // উচ্চতা অনুযায়ী উপরে উঠে যাচ্ছে
-          background: 'black', 
-          color: 'white',
-          padding: '10px'
+          background: "black",
+          color: "white",
+          padding: "10px",
         }}
       >
         আমি একটি ডাইনামিক টুলটিপ!
@@ -238,18 +236,82 @@ function TooltipExample() {
 /**
  * হাসান'স প্রো-টিপ (সতর্কতা):
  * -------------------------
- * - এটি 'Synchronous' হওয়ায় এটি শেষ না হওয়া পর্যন্ত ব্রাউজার স্ক্রিন আপডেট করে না। 
- * - তাই এখানে বড় কোনো 'API Call' বা 'Heavy Loop' চালানো যাবে না। 
+ * - এটি 'Synchronous' হওয়ায় এটি শেষ না হওয়া পর্যন্ত ব্রাউজার স্ক্রিন আপডেট করে না।
+ * - তাই এখানে বড় কোনো 'API Call' বা 'Heavy Loop' চালানো যাবে না।
  * - সাধারণ রুল: যদি কোনো ভিজ্যুয়াল বাগ বা ফ্লিকারিং (Flickering) না হয়, তবে সবসময় useEffect-ই ব্যবহার করো।
  */
 
 /**
- * ৯. useImperativeHandle
- * ----------------------
- * IMPORT: import { useImperativeHandle } from 'react';
- * CONVENTION: useImperativeHandle(ref, () => ({ method() {} }));
- * * - কাজ: প্যারেন্ট কম্পোনেন্ট থেকে চাইল্ডের কোনো নির্দিষ্ট ফাংশনকে কন্ট্রোল করা।
+ * ৯. useImperativeHandle (The Bridge Controller) - [ES6+]
+ * ------------------------------------------------------
+ * IMPORT: import { useImperativeHandle, forwardRef } from 'react';
+ * CONVENTION: useImperativeHandle(ref, () => ({ customMethod() {} }), [deps]);
+ * * * - কাজ: চাইল্ড কম্পোনেন্টের নির্দিষ্ট কিছু ফাংশন বা প্রোপার্টি প্যারেন্ট কম্পোনেন্টের কাছে উন্মুক্ত করা।
+ * - ইউনিকনেস: এটি রি-রেন্ডার না ঘটিয়েই চাইল্ডের সাথে যোগাযোগ করতে সাহায্য করে।
+ * * * * * REAL PROJECT USE CASE (Modal & Input Control):
+ * * USE CASE 1: একটি কাস্টম ইনপুট কম্পোনেন্টকে প্যারেন্ট থেকে Focus বা Clear করা।
+ * * USE CASE 2: একটি মোডাল (Modal) কম্পোনেন্টকে প্যারেন্ট থেকে Open বা Close করা।
+ * * USE CASE 3: চাইল্ডের কোনো সিক্রেট অ্যানিমেশন প্যারেন্টের বাটনের মাধ্যমে শুরু করা।
  */
+
+// --- পরিপূর্ণ প্রাকটিক্যাল উদাহরণ (Hasan's Custom Input Example) ---
+
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
+
+// চাইল্ড কম্পোনেন্ট: MyInput
+const MyInput = forwardRef((props, ref) => {
+  const inputRef = useRef();
+
+  // প্যারেন্ট কম্পোনেন্ট শুধু নিচের ২টি ফাংশনই ব্যবহার করতে পারবে
+  useImperativeHandle(ref, () => ({
+    focusHasan: () => {
+      inputRef.current.focus();
+    },
+    clearHasan: () => {
+      inputRef.current.value = "";
+    },
+  }));
+
+  return <input ref={inputRef} type="text" placeholder="এখানে কিছু লেখো..." />;
+});
+
+// প্যারেন্ট কম্পোনেন্ট: Parent
+function Parent() {
+  const childRef = useRef(null);
+
+  return (
+    <div>
+      <MyInput ref={childRef} />
+      <button onClick={() => childRef.current.focusHasan()}>ফোকাস করো</button>
+      <button onClick={() => childRef.current.clearHasan()}>
+        ক্লিয়ার করো
+      </button>
+    </div>
+  );
+}
+
+/**
+ * হাসান'স প্রো-টিপ (সতর্কতা):
+ * -------------------------
+ * - এটি রিয়্যাক্টের 'Declarative' নিয়মের বাইরে গিয়ে 'Imperative' ভাবে কাজ করে।
+ * - তাই এটি শুধু তখনই ব্যবহার করবে যখন প্রপস (Props) দিয়ে কাজটা করা সম্ভব হচ্ছে না।
+ * - ৯৯% ক্ষেত্রে এটি দরকার হয় না, তবে লাইব্রেরি বা কাস্টম UI কিট বানাতে এটি মাস্ট!
+ *
+ *
+ * কেন Props না দিয়ে useImperativeHandle ব্যবহার করবো?
+ * ------------------------------------------------
+ * ১. ডিরেক্ট কন্ট্রোল: প্যারেন্ট যখন খুশি চাইল্ডের ফাংশন কল করতে পারে (যেমন: Focus, Scroll, Play)।
+ * ২. স্টেট কমানো: অপ্রয়োজনীয় 'Boolean State' (যেমন: isOpen, isLoading) ছাড়াই চাইল্ডকে কমান্ড দেওয়া যায়।
+ * ৩. ইনক্যাপসুলেশন (Encapsulation): চাইল্ড তার ভেতরের সব গোপন লজিক দেখাবে না, শুধু যেটুকু প্যারেন্টের দরকার সেটুকুই 'Handle' হিসেবে দিবে।
+ *
+ * Props বনাম useImperativeHandle:
+ * ------------------------------
+ * ১. Props (স্টেট নির্ভর): যখন চাইল্ডের 'অবস্থা' (যেমন: কালার, ডাটা, দৃশ্যমানতা) বদলাতে হয়।
+ * ২. useImperativeHandle (অ্যাকশন নির্ভর): যখন চাইল্ডকে দিয়ে কোনো 'কাজ' (যেমন: Focus, Play, Scroll, Reset) করাতে হয়।
+ * * হাসান মনে রাখবে: যদি দেখ যে একটা ছোট কাজের জন্য তোমাকে প্যারেন্টে অহেতুক স্টেট (useState) বানাতে হচ্ছে, 
+ * তখনই বুঝবে সেখানে 'useImperativeHandle' ব্যবহার করা বুদ্ধিমানের কাজ।
+  
+*/
 
 /**
  * ১০. useDebugValue
