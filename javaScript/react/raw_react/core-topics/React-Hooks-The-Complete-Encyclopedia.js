@@ -317,13 +317,13 @@ function Parent() {
  * ১০. useDebugValue (The Custom Hook Labeler) - [ES6+]
  * --------------------------------------------------
  * IMPORT: import { useDebugValue } from 'react';
- * * কুইক নোট: এটি শুধুমাত্র 'Custom Hooks'-এর ভেতরে কাজ করে। এটি ব্যবহার করলে 
+ * * কুইক নোট: এটি শুধুমাত্র 'Custom Hooks'-এর ভেতরে কাজ করে। এটি ব্যবহার করলে
  * React DevTools-এ তোমার তৈরি হুকের পাশে একটি সুন্দর স্ট্যাটাস বা মেসেজ দেখা যায়।
  */
 
 // --- Deep Dive Example (Hasan's Custom Hook) ---
 
-import { useState, useEffect, useDebugValue } from 'react';
+import { useState, useEffect, useDebugValue } from "react";
 
 function useFriendStatus(friendID) {
   const [isOnline, setIsOnline] = useState(null);
@@ -331,11 +331,14 @@ function useFriendStatus(friendID) {
   // ডিবাগ ভ্যালু সেট করা: এটি সরাসরি 'useFriendStatus' হুকের পাশে দেখাবে।
   // প্রথম প্যারামিটার: যে ভ্যালুটা আমরা ট্র্যাক করতে চাই।
   // দ্বিতীয় প্যারামিটার (Optional): একটি ফরম্যাটার ফাংশন যা শুধু ডেভ-টুলস ওপেন করলেই রান হবে।
-  useDebugValue(isOnline ? "বন্ধু লাইনে আছে" : "বন্ধু অফলাইন", status => `Status: ${status}`);
+  useDebugValue(
+    isOnline ? "বন্ধু লাইনে আছে" : "বন্ধু অফলাইন",
+    (status) => `Status: ${status}`,
+  );
 
   useEffect(() => {
     // এখানে কোনো API কল বা লজিক থাকতে পারে যা isOnline সেট করবে
-    setIsOnline(true); 
+    setIsOnline(true);
   }, [friendID]);
 
   return isOnline;
@@ -365,7 +368,7 @@ function useFriendStatus(friendID) {
  * -----------------------------------------
  * - এটি রিয়্যাক্টকে বলে: "এই আপডেটটি কম গুরুত্বপূর্ণ (Low Priority), তাই এটি ব্যাকগ্রাউন্ডে করো।"
  * - এটি ভারী রেন্ডারিংয়ের সময় ব্রাউজার বা UI-কে 'Freeze' বা 'Hang' হতে দেয় না।
- * - Interruptible Rendering: যদি ভারী কাজের মাঝখানে ইউজার আবার টাইপ বা ক্লিক করে, 
+ * - Interruptible Rendering: যদি ভারী কাজের মাঝখানে ইউজার আবার টাইপ বা ক্লিক করে,
  * তবে রিয়্যাক্ট আগের কাজ থামিয়ে দিয়ে আগে ইউজারের নতুন কমান্ডে সাড়া দেয়।
  */
 
@@ -380,7 +383,6 @@ function useFriendStatus(friendID) {
  * | ইন্টারাপ্টেবল       | না (টাইমার শেষ হলে কাজ করবেই)।     | হ্যাঁ (ইউজার চাইলে কাজ থামিয়ে দেয়)। |
  * | সারকথা            | সার্ভারকে বাঁচানোর জন্য সেরা।        | ইউজারের ব্রাউজারকে বাঁচানোর জন্য সেরা।|
  */
- 
 
 /**
  * ১১.৩. কোথায় কোথায় ব্যবহার করবে? (Practical Use Cases):
@@ -393,7 +395,7 @@ function useFriendStatus(friendID) {
 
 // --- ১১.৪. পরিপূর্ণ প্রাকটিক্যাল উদাহরণ (Hasan's Smooth UI Example) ---
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition } from "react";
 
 function MySmartApp() {
   const [isPending, startTransition] = useTransition();
@@ -402,14 +404,14 @@ function MySmartApp() {
 
   const handleSearch = (e) => {
     const value = e.target.value;
-    
+
     // ১. Urgent Update: ইনপুট বক্সে লেখা সাথে সাথে দেখাতে হবে
     setSearchTerm(value);
 
     // ২. Non-Urgent Update: বড় লিস্ট ফিল্টার করা (যা ল্যাগ করতে পারে)
     startTransition(() => {
       // এখানে ধরো ২০,০০০ ডাটা ফিল্টার হচ্ছে
-      const results = allData.filter(item => item.includes(value));
+      const results = allData.filter((item) => item.includes(value));
       setFilteredList(results);
     });
   };
@@ -417,12 +419,16 @@ function MySmartApp() {
   return (
     <div>
       <input type="text" onChange={handleSearch} placeholder="সার্চ করো..." />
-      
+
       {/* isPending দিয়ে ইউজারকে ফিডব্যাক দেওয়া যায় */}
-      {isPending && <p style={{ color: 'blue' }}>ব্যাকগ্রাউন্ডে ডাটা প্রসেস হচ্ছে...</p>}
-      
+      {isPending && (
+        <p style={{ color: "blue" }}>ব্যাকগ্রাউন্ডে ডাটা প্রসেস হচ্ছে...</p>
+      )}
+
       <div style={{ opacity: isPending ? 0.5 : 1 }}>
-        {filteredList.map((item, index) => <p key={index}>{item}</p>)}
+        {filteredList.map((item, index) => (
+          <p key={index}>{item}</p>
+        ))}
       </div>
     </div>
   );
@@ -472,7 +478,7 @@ function MySmartApp() {
 
 // --- ৪. পরিপূর্ণ প্রাকটিক্যাল উদাহরণ (Hasan's Advanced Implementation) ---
 
-import { useState, useDeferredValue, useMemo } from 'react';
+import { useState, useDeferredValue, useMemo } from "react";
 
 function MyBigList({ query }) {
   // ১. প্যারেন্ট থেকে আসা 'query' প্রপসকে আমরা ডিফার (Defer) করছি
@@ -482,15 +488,17 @@ function MyBigList({ query }) {
   const list = useMemo(() => {
     const items = [];
     for (let i = 0; i < 20000; i++) {
-      items.push(<div key={i}>{deferredQuery} - রেজাল্ট {i}</div>);
+      items.push(
+        <div key={i}>
+          {deferredQuery} - রেজাল্ট {i}
+        </div>,
+      );
     }
     return items;
   }, [deferredQuery]); // শুধু deferredQuery চেঞ্জ হলেই এটি চলবে
 
   return (
-    <div style={{ opacity: query !== deferredQuery ? 0.5 : 1 }}>
-      {list}
-    </div>
+    <div style={{ opacity: query !== deferredQuery ? 0.5 : 1 }}>{list}</div>
   );
 }
 
@@ -500,12 +508,12 @@ function ParentComponent() {
   return (
     <div>
       {/* ইনপুট টাইপিং হবে সুপার ফাস্ট (Urgent) */}
-      <input 
-        value={text} 
-        onChange={(e) => setText(e.target.value)} 
-        placeholder="টাইপ করো..." 
+      <input
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="টাইপ করো..."
       />
-      
+
       {/* চাইল্ডে ডাটা পাঠানো হচ্ছে যা চাইল্ড নিজে কন্ট্রোল করবে */}
       <MyBigList query={text} />
     </div>
@@ -531,7 +539,7 @@ function ParentComponent() {
  * ১৩.১. useId-এর কাজ কী? (The Core Job):
  * ---------------------------------
  * - এটি একটি ইউনিক (অদ্বিতীয়) আইডি জেনারেট করে যা পুরো অ্যাপে কখনো ডুপ্লিকেট হয় না।
- * - কাজের ধরণ: এটি সার্ভার (SSR) এবং ক্লায়েন্ট (CSR) দুই জায়গাতেই 'একই আইডি' নিশ্চিত করে। 
+ * - কাজের ধরণ: এটি সার্ভার (SSR) এবং ক্লায়েন্ট (CSR) দুই জায়গাতেই 'একই আইডি' নিশ্চিত করে।
  * - উদ্দেশ্য: HTML এলিমেন্টগুলোর মধ্যে সম্পর্ক (Label <-> Input) তৈরি করা।
  */
 
@@ -549,9 +557,9 @@ function ParentComponent() {
 /**
  * ১৩.৩. কেন এটি লাইফ-সেভার? (Real Problem vs Solution):
  * ---------------------------------------------------
- * - সমস্যা: যদি ম্যানুয়াল আইডি (id="email") দাও, তবে এক-ই পেজে Header-এ এবং Footer-এ 
+ * - সমস্যা: যদি ম্যানুয়াল আইডি (id="email") দাও, তবে এক-ই পেজে Header-এ এবং Footer-এ
  * লগইন ফর্ম থাকলে ID Conflict হয়। লেবেলে ক্লিক করলে ভুল ইনপুট ফোকাস হয়।
- * - সমাধান: useId প্রতিবারের জন্য আলাদা প্রিফিক্স (যেমন: :r0:, :r1:) জেনারেট করে 
+ * - সমাধান: useId প্রতিবারের জন্য আলাদা প্রিফিক্স (যেমন: :r0:, :r1:) জেনারেট করে
  * তাই কোনো কনফ্লিক্ট হয় না।
  */
 
@@ -565,19 +573,19 @@ function ParentComponent() {
 
 // --- ১৩.৫. পরিপূর্ণ উদাহরণ (হাসানের ইউনিক ফর্ম) ---
 
-import { useId } from 'react';
+import { useId } from "react";
 
 function MyInput({ label }) {
   const id = useId(); // প্রতিবার ব্যবহারের সময় ইউনিক আইডি পাবে
 
   return (
-    <div style={{ margin: '10px 0' }}>
+    <div style={{ margin: "10px 0" }}>
       {/* লেবেল এবং ইনপুট-কে লিঙ্ক করা হলো */}
       <label htmlFor={id}>{label}: </label>
       <input id={id} type="text" />
-      
+
       {/* হেল্প টেক্সট-এর জন্য ইউনিক আইডি লিঙ্ক করা */}
-      <p id={id + '-help'}>এটি ইউনিক আইডি: {id} ব্যবহার করছে।</p>
+      <p id={id + "-help"}>এটি ইউনিক আইডি: {id} ব্যবহার করছে।</p>
     </div>
   );
 }
@@ -595,16 +603,88 @@ function App() {
 /**
  * হাসানের প্রো-টিপস (সতর্কতা):
  * --------------------------
- * ১. লিস্ট-এর 'Key' (key={...}) হিসেবে useId কখনো ব্যবহার করবে না। এটি রেন্ডারিং-এর 
+ * ১. লিস্ট-এর 'Key' (key={...}) হিসেবে useId কখনো ব্যবহার করবে না। এটি রেন্ডারিং-এর
  * সময় পরিবর্তন হতে পারে যা বাগ তৈরি করবে।
  * ২. এটি শুধু HTML এলিমেন্টের রিলেশনশিপ (অ্যাক্সেসিবিলিটি) এর জন্য তৈরি করা হয়েছে।
  */
 
 /**
- * ১৪. useSyncExternalStore (React 18 - Rare)
- * -----------------------------------------
+ * ১৪. useSyncExternalStore (এক্সটারনাল স্টোর ব্রিজ) - [React 18+]
+ * -----------------------------------------------------------
  * IMPORT: import { useSyncExternalStore } from 'react';
- * * - কাজ: এক্সটারনাল স্টোর (যেমন: ব্রাউজার API বা স্টোর ম্যানেজমেন্ট) এর সাথে সিঙ্ক করা।
+ * CONVENTION: const state = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot?);
+ */
+
+/**
+ * ১৪.১. useSyncExternalStore-এর কাজ কী? (The Core Job):
+ * -----------------------------------------------
+ * - এটি রিয়্যাক্টের বাইরের কোনো ডাটা সোর্স (External Store)-কে রিয়্যাক্ট স্টেটের সাথে সিঙ্ক (Sync) করে।
+ * - উদ্দেশ্য: 'Tearing' সমস্যা সমাধান করা (অর্থাৎ একই ডাটা স্ক্রিনের দুই জায়গায় দুই রকম দেখানোর সমস্যা বন্ধ করা)।
+ * - কাজ করার ধরণ: বাইরের ওই ডাটা চেঞ্জ হলে এটি রিয়্যাক্টকে রি-রেন্ডার করায়।
+ */
+
+/**
+ * ১৪.২. Redux এবং Context API-এর সাথে সম্পর্ক (হাসানের প্রশ্ন):
+ * ------------------------------------------------------
+ * | ফিচার               | useSyncExternalStore আছে? | কারণ বা ব্যাখ্যা                   |
+ * | :---               | :---                     | :---                              |
+ * | **Redux / Zustand**| **হ্যাঁ (অভ্যন্তরীণভাবে)** | এগুলো রিয়্যাক্টের বাইরের স্টোর। তাই তারা পর্দার আড়ালে এই হুক ব্যবহার করে। |
+ * | **Context API** | **না** | এটি রিয়্যাক্টের নিজস্ব স্টেট ম্যানেজমেন্ট। তাই আলাদা সিঙ্ক ব্রিজের দরকার নেই। |
+ * | **Browser API** | **হ্যাঁ (নিজে লিখতে হয়)** | উইন্ডো সাইজ বা অনলাইন স্ট্যাটাস ট্র্যাক করতে এটি ব্যবহার করা সেরা। |
+ */
+
+/**
+ * ১৪.৩. কেন এটি সাধারণ useState-এর চেয়ে আলাদা? (The Problem):
+ * ------------------------------------------------------
+ * - রিয়্যাক্ট ১৮-এর 'Concurrent Rendering'-এ ডাটা আপডেট হওয়ার সময় অনেক সময় ব্রাউজার ল্যাগ করলে
+ * ইউজার স্ক্রিনে ভুল বা পুরনো ডাটা দেখতে পারে।
+ * - এই হুক নিশ্চিত করে যে, বাইরের ডাটা সোর্স যাই হোক না কেন, রিয়্যাক্ট সবসময় সেটার 'সঠিক' মানটাই দেখাবে।
+ */
+
+/**
+ * ১৪.৪. কোথায় ব্যবহার করবে? (Practical Use Cases):
+ * ------------------------------------------
+ * ১. Browser API: window.navigator.onLine বা window.innerWidth ট্র্যাক করতে।
+ * ২. Global Object: রিয়্যাক্টের কন্ট্রোলের বাইরে থাকা কোনো গ্লোবাল ভেরিয়েবল ট্র্যাক করতে।
+ * ৩. Custom Store: যদি তুমি নিজে Redux-এর মতো কোনো গ্লোবাল স্টোর লাইব্রেরি বানাতে চাও।
+ */
+
+// --- ১৪.৫. পরিপূর্ণ উদাহরণ (হাসানের অনলাইন স্ট্যাটাস ট্র্যাকার) ---
+
+import { useSyncExternalStore } from "react";
+
+// ১৪.৫.১. সাবস্ক্রাইব ফাংশন: যখনই অনলাইন/অফলাইন হবে, রিয়্যাক্টকে জানাবে
+function subscribe(callback) {
+  window.addEventListener("online", callback);
+  window.addEventListener("offline", callback);
+  return () => {
+    window.removeEventListener("online", callback);
+    window.removeEventListener("offline", callback);
+  };
+}
+
+// ১৪.৫.২. স্ন্যাপশট ফাংশন: বর্তমান ভ্যালুটা রিটার্ন করবে
+function getSnapshot() {
+  return navigator.onLine;
+}
+
+function OnlineChecker() {
+  // useSyncExternalStore দিয়ে ব্রাউজারের সাথে কানেক্ট করা
+  const isOnline = useSyncExternalStore(subscribe, getSnapshot);
+
+  return (
+    <div>
+      <h1>{isOnline ? "✅ আপনি অনলাইনে আছেন" : "❌ আপনি অফলাইনে আছেন"}</h1>
+    </div>
+  );
+}
+
+/**
+ * হাসানের প্রো-টিপস (সতর্কতা):
+ * --------------------------
+ * ১. সাধারণ 'Internal State' (যেমন ফর্ম বা ছোট ডাটা) এর জন্য এটি ব্যবহার করা "বোকামি"।
+ * ২. এটি মূলত লাইব্রেরি ডেভেলপারদের জন্য (যেমন Redux বা Zustand তৈরি করার সময়)।
+ * ৩. getSnapshot ফাংশনটি সবসময় একই টাইপের ডাটা রিটার্ন করতে হবে, নাহলে ইনফিনিট লুপ হতে পারে।
  */
 
 /**
