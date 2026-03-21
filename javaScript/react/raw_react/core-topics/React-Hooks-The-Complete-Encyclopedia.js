@@ -907,10 +907,81 @@ function ChatApp({ messages }) {
  */
 
 /**
- * ১৮. useActionState / useFormStatus (React 19)
- * --------------------------------------------
- * IMPORT: import { useActionState } from 'react'; (Formerly useFormState)
- * * - কাজ: ফরম হ্যান্ডলিং এবং পেন্ডিং স্টেট দেখার জন্য স্পেশাল হুক।
+ * ১৮. useActionState + useFormStatus (The Ultimate Form Duo) - [React 19]
+ * ---------------------------------------------------------------------
+ * ১. useActionState: ফর্মের স্টেট (Success/Error) এবং মেইন অ্যাকশন হ্যান্ডেল করে।
+ * ২. useFormStatus: শুধুমাত্র চাইল্ড কম্পোনেন্টে ফর্মের 'Pending' স্ট্যাটাস জানায়।
+ */
+
+/**
+ * কেন এই দুটি একসাথে ব্যবহার করবে? (The Power Couple):
+ * ------------------------------------------------
+ * - 'useActionState' মেইন ফর্মে থাকে যা সার্ভার রেসপন্স (যেমন: "Login Successful") মনে রাখে।
+ * - 'useFormStatus' বাটনের ভেতরে থাকে যা ইউজারকে "Loading..." টেক্সট দেখায়।
+ * - সুবিধা: তোমাকে কোনো Props পাঠাতে হয় না, কোড অনেক ক্লিন থাকে।
+ */
+
+// --- প্রাকটিক্যাল উদাহরণ: হাসানের প্রফেশনাল লগইন ফর্ম ---
+
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
+
+// ১৮.১. সার্ভার অ্যাকশন ফাংশন (Server Action)
+async function loginUser(prevState, formData) {
+  const email = formData.get("email");
+  
+  // Fake API Delay
+  await new Promise(res => setTimeout(res, 2000));
+
+  if (email !== "hasan@example.com") {
+    return { error: "ভুল ইমেইল! আবার চেষ্টা করুন।" };
+  }
+  return { success: "স্বাগতম হাসান! আপনি লগইন করেছেন।" };
+}
+
+// ১৮.২. চাইল্ড বাটন কম্পোনেন্ট (useFormStatus এখানেই থাকবে)
+function SubmitButton() {
+  const { pending } = useFormStatus(); // এটি অটোমেটিক ওপরের ফর্মকে ট্র্যাক করবে
+
+  return (
+    <button type="submit" disabled={pending} style={{ marginTop: '10px' }}>
+      {pending ? "চেক করা হচ্ছে..." : "লগইন করুন"}
+    </button>
+  );
+}
+
+// ১৮.৩. মেইন ফর্ম কম্পোনেন্ট (useActionState এখানেই থাকবে)
+export default function LoginForm() {
+  // state: সার্ভার থেকে আসা রেজাল্ট, formAction: ফর্মের জন্য ফাংশন
+  const [state, formAction] = useActionState(loginUser, null);
+
+  return (
+    <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
+      <h2>লগইন ফর্ম</h2>
+      
+      <form action={formAction}>
+        <input name="email" type="email" placeholder="আপনার ইমেইল" required />
+        <br />
+        <input name="password" type="password" placeholder="পাসওয়ার্ড" required />
+        
+        {/* চাইল্ড কম্পোনেন্ট: এটি ডিফল্টভাবেই এই ফর্মের স্ট্যাটাস পাবে */}
+        <SubmitButton />
+
+        {/* সার্ভার থেকে আসা মেসেজ দেখানো */}
+        {state?.error && <p style={{ color: 'red' }}>{state.error}</p>}
+        {state?.success && <p style={{ color: 'green' }}>{state.success}</p>}
+      </form>
+    </div>
+  );
+}
+
+/**
+ * হাসানের রিভিশন নোট (Quick Checklist):
+ * -----------------------------------
+ * ১. Parent Level: মেইন ফর্মে 'useActionState' ব্যবহার করো ডাটা আর এরর হ্যান্ডেল করতে।
+ * ২. Child Level: বাটনের জন্য আলাদা কম্পোনেন্ট বানিয়ে সেখানে 'useFormStatus' ব্যবহার করো।
+ * ৩. No Props: বাটনকে আলাদা করে 'loading' প্রপস পাঠানোর কোনো দরকার নেই।
+ * ৪. Default Awareness: বাটনটি যেই ফর্মের পেটে (Children) থাকবে, সেই ফর্মেরই ডাটা সে পাবে।
  */
 
 console.log("Hasan, keep this file as your Hooks Dictionary!");
