@@ -354,14 +354,87 @@ function useFriendStatus(friendID) {
 // ------------------------------------------------------------------------
 
 /**
- * ১১. useTransition (React 18)
- * ---------------------------
+ * ১১. useTransition (The UI Performance Master) - [React 18+]
+ * ---------------------------------------------------------
  * IMPORT: import { useTransition } from 'react';
  * CONVENTION: const [isPending, startTransition] = useTransition();
- * * - কাজ: UI আপডেটকে দুই ভাগে ভাগ করা (Urgent vs Non-Urgent)।
- * - ব্যবহার: সার্চ ফিল্টারিং করার সময় টাইপিং যেন ল্যাগ না করে।
  */
-const [isPending, startTransition] = useTransition();
+
+/**
+ * ১১.১. useTransition-এর কাজ কী? (The Core Job):
+ * -----------------------------------------
+ * - এটি রিয়্যাক্টকে বলে: "এই আপডেটটি কম গুরুত্বপূর্ণ (Low Priority), তাই এটি ব্যাকগ্রাউন্ডে করো।"
+ * - এটি ভারী রেন্ডারিংয়ের সময় ব্রাউজার বা UI-কে 'Freeze' বা 'Hang' হতে দেয় না।
+ * - Interruptible Rendering: যদি ভারী কাজের মাঝখানে ইউজার আবার টাইপ বা ক্লিক করে, 
+ * তবে রিয়্যাক্ট আগের কাজ থামিয়ে দিয়ে আগে ইউজারের নতুন কমান্ডে সাড়া দেয়।
+ */
+
+/**
+ * ১১.২. useTransition বনাম Debounce (কখন কোনটা?):
+ * -------------------------------------------
+ * | বৈশিষ্ট্য          | Debounce (Time-based)          | useTransition (Priority-based) |
+ * | :---              | :---                           | :---                           |
+ * | শুরুর সময়         | টাইপিং থামার একটি নির্দিষ্ট সময় পর। | সাথে সাথেই ব্যাকগ্রাউন্ডে শুরু হয়।  |
+ * | আসল উদ্দেশ্য       | API বা নেটওয়ার্ক কল বাঁচানো।        | ব্রাউজার ল্যাগ বা হ্যাং হওয়া কমানো। |
+ * | কাজের ধরণ         | এটি কাজকে 'দেরি' করিয়ে দেয়।        | এটি কাজের 'গুরুত্ব' কমিয়ে দেয়।      |
+ * | ইন্টারাপ্টেবল       | না (টাইমার শেষ হলে কাজ করবেই)।     | হ্যাঁ (ইউজার চাইলে কাজ থামিয়ে দেয়)। |
+ * | সারকথা            | সার্ভারকে বাঁচানোর জন্য সেরা।        | ইউজারের ব্রাউজারকে বাঁচানোর জন্য সেরা।|
+ */
+ 
+
+/**
+ * ১১.৩. কোথায় কোথায় ব্যবহার করবে? (Practical Use Cases):
+ * -------------------------------------------------
+ * ১. বিশাল লিস্ট ফিল্টার: যখন ১০০০+ ডাটা লোকালি ফিল্টার বা সর্ট করতে হয়।
+ * ২. ট্যাব সুইচিং: এক ট্যাব থেকে অন্য ট্যাবে যাওয়ার সময় যদি সেখানে অনেক ভারী গ্রাফ বা চার্ট থাকে।
+ * ৩. স্মুথ নেভিগেশন: 'Suspense' এর সাথে মিলিয়ে এক পেজ থেকে অন্য পেজে যাওয়ার সময়।
+ * ৪. ডাটা রেন্ডারিং: অনেক বড় ডাটা যখন স্ক্রিনে দেখাতে গিয়ে ইউজার টাইপিং ল্যাগ করে।
+ */
+
+// --- ১১.৪. পরিপূর্ণ প্রাকটিক্যাল উদাহরণ (Hasan's Smooth UI Example) ---
+
+import { useState, useTransition } from 'react';
+
+function MySmartApp() {
+  const [isPending, startTransition] = useTransition();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredList, setFilteredList] = useState([]);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    
+    // ১. Urgent Update: ইনপুট বক্সে লেখা সাথে সাথে দেখাতে হবে
+    setSearchTerm(value);
+
+    // ২. Non-Urgent Update: বড় লিস্ট ফিল্টার করা (যা ল্যাগ করতে পারে)
+    startTransition(() => {
+      // এখানে ধরো ২০,০০০ ডাটা ফিল্টার হচ্ছে
+      const results = allData.filter(item => item.includes(value));
+      setFilteredList(results);
+    });
+  };
+
+  return (
+    <div>
+      <input type="text" onChange={handleSearch} placeholder="সার্চ করো..." />
+      
+      {/* isPending দিয়ে ইউজারকে ফিডব্যাক দেওয়া যায় */}
+      {isPending && <p style={{ color: 'blue' }}>ব্যাকগ্রাউন্ডে ডাটা প্রসেস হচ্ছে...</p>}
+      
+      <div style={{ opacity: isPending ? 0.5 : 1 }}>
+        {filteredList.map((item, index) => <p key={index}>{item}</p>)}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * হাসানের গোল্ডেন রুল (Golden Rule):
+ * -------------------------------
+ * - যদি কাজটা 'Network' বা 'API' কল কমানোর হয় -> ব্যবহার করো Debounce।
+ * - যদি কাজটা 'Browser' বা 'Rendering' ল্যাগ কমানোর হয় -> ব্যবহার করো useTransition।
+ * * প্রো-টিপ: প্রফেশনাল প্রজেক্টে অনেক সময় ইনপুটে Debounce এবং রেন্ডারিংয়ে useTransition একসাথেও ব্যবহার করা হয়!
+ */
 
 /**
  * ১২. useDeferredValue (React 18)
