@@ -63,16 +63,102 @@ useEffect(() => {
 }, []);
 
 /**
- * ৩. useContext (Global State Access) - [ES6+]
- * ------------------------------------------
- * IMPORT: import { useContext } from 'react';
- * CONVENTION: const value = useContext(MyContext);
- * * - কাজ: প্রপ ড্রিলিং (Prop Drilling) ছাড়াই গ্লোবাল ডেটা এক্সেস করা।
- * - ইউনিক বিষয়: এটি Context API-কে অনেক সহজে ব্যবহারযোগ্য করে তোলে।
- * * USE CASE 1: ইউজার থিম (Dark/Light Mode) এক্সেস করা।
- * USE CASE 2: লগইন করা ইউজারের ইনফরমেশন সব কম্পোনেন্টে পাঠানো।
+ * ৩. Context API: গ্লোবাল ডাটা ম্যানেজমেন্ট (Step-by-Step Guide)
+ * -----------------------------------------------------------
+ * Props Drilling (এক কম্পোনেন্ট থেকে অন্য কম্পোনেন্টে বারবার ডাটা পাঠানো) 
+ * সমস্যা সমাধান করার জন্য Context API ব্যবহার করা হয়।
  */
-const theme = useContext(ThemeContext);
+
+import { createContext, useContext, useState } from 'react';
+
+// ==========================================
+// ধাপ ৩.১: কন্টেক্সট বা 'বালতি' তৈরি করা
+// ==========================================
+// এটি একটি খালি স্টোর তৈরি করে যা সবার জন্য উন্মুক্ত।
+const MyDataContext = createContext();
+
+// ==========================================
+// ধাপ ৩.২: প্রোভাইডার (Provider) তৈরি করা
+// ==========================================
+// এটিই মেইন স্টোর যেখানে ডাটা থাকে এবং আপডেট করার ফাংশন থাকে।
+export function MyDataProvider({ children }) {
+  // ক) ডাটা রাখার জন্য মেইন স্টেট
+  const [items, setItems] = useState(["React শেখা", "Next.js প্রজেক্ট"]);
+
+  // খ) নতুন ডাটা ঢোকানোর (Add) ফাংশন
+  const addItem = (newItem) => {
+    // ইমিউটেবল উপায়ে আগের সব আইটেমের সাথে নতুনটি যোগ করা
+    setItems((prevItems) => [...prevItems, newItem]);
+  };
+
+  return (
+    // গ) 'value' এর মাধ্যমে ডাটা এবং ফাংশন দুটোই সবার জন্য পাঠিয়ে দেওয়া
+    <MyDataContext.Provider value={{ items, addItem }}>
+      {children}
+    </MyDataContext.Provider>
+  );
+}
+
+// ==========================================
+// ধাপ ৩.৩: ডাটা ঢোকানো (Adding Data)
+// ==========================================
+// এই কম্পোনেন্টটি ব্যবহার করে আমরা কন্টেক্সটে নতুন ডাটা পুশ করবো।
+function AddItemComponent() {
+  // useContext দিয়ে বালতি থেকে 'addItem' ফাংশনটি বের করা
+  const { addItem } = useContext(MyDataContext);
+  const [text, setText] = useState("");
+
+  const handleAdd = () => {
+    if (text.trim()) {
+      addItem(text); // কন্টেক্সটের ফাংশন কল করে ডাটা ইনসার্ট করা
+      setText("");   // ইনপুট ফিল্ড খালি করা
+    }
+  };
+
+  return (
+    <div style={{ margin: '10px 0' }}>
+      <input 
+        value={text} 
+        onChange={(e) => setText(e.target.value)} 
+        placeholder="নতুন কিছু লিখুন..." 
+      />
+      <button onClick={handleAdd}>আইটেম যোগ করুন</button>
+    </div>
+  );
+}
+
+// ==========================================
+// ধাপ ৩.৪: ডাটা বের করা ও দেখানো (Fetching Data)
+// ==========================================
+// যেখানে ডাটা দরকার, সেখানে useContext ব্যবহার করে ডাটা রেন্ডার করা।
+function DisplayComponent() {
+  // useContext দিয়ে বালতি থেকে 'items' ডাটা বের করা
+  const { items } = useContext(MyDataContext);
+
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>
+  );
+}
+
+// ==========================================
+// ধাপ ৩.৫: মেইন সেটআপ (App structure)
+// ==========================================
+export default function App() {
+  return (
+    // পুরো অ্যাপকে প্রোভাইডার দিয়ে মুড়িয়ে দাও যাতে সবাই ডাটা পায়
+    <MyDataProvider>
+      <div style={{ padding: '20px' }}>
+        <h1>হাসানের এনসাইক্লোপিডিয়া: Context API</h1>
+        <AddItemComponent />
+        <DisplayComponent />
+      </div>
+    </MyDataProvider>
+  );
+}
 
 // ------------------------------------------------------------------------
 // CATEGORY 2: PERFORMANCE HOOKS (অ্যাপ ফাস্ট করার জন্য)
