@@ -6,7 +6,7 @@
  */
 
 /*
- [JS Object] 
+ [JS Object] // react-element
     |
     v
  [V8 Engine] ---> (Logic/State নিজের কাছে রাখে)
