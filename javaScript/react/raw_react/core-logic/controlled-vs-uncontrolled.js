@@ -1,5 +1,5 @@
 /**
- * ২৭. Controlled vs Uncontrolled Components (ডিপ ডাইভ নোট)
+ *   Controlled vs Uncontrolled Components (ডিপ ডাইভ নোট)
  * ---------------------------------------------------------
  * ফোল্ডার: core-topics
  * ফাইল নাম: controlled-vs-uncontrolled.js
