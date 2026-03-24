@@ -62,6 +62,21 @@ useEffect(() => {
   return () => clearInterval(timer); // Cleanup (মাস্ট)
 }, []);
 
+// ২.১. Dependency array নেই — প্রতিটা render-এ run করে
+useEffect(() => {
+  console.log("Every render");
+});
+
+// ২.২. খালি array — শুধু mount-এ একবার run করে
+useEffect(() => {
+  console.log("Only on mount");
+}, []);
+
+// ২.৩. Dependency আছে — mount + dependency change হলে run করে
+useEffect(() => {
+  console.log("count changed");
+}, [count]);
+
 /**
  * ৩. Context API: গ্লোবাল ডাটা ম্যানেজমেন্ট (Step-by-Step Guide)
  * -----------------------------------------------------------
