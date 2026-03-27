@@ -222,7 +222,7 @@ fetch(url, {
 
 ```javascript
 fetch(url, {
-  next: { tags: ["products"] },
+  next: { tags: ["payment-info"] },
 });
 ```
 এটি একটু বেশি অ্যাডভান্সড এবং বুদ্ধিমান পদ্ধতি। এখানে তুমি ডাটা ফেচ করার সময় তাকে একটা নাম বা ট্যাগ দাও।
@@ -238,7 +238,7 @@ fetch(url, {
 ```javascript
 import { revalidateTag } from "next/cache";
 
-revalidateTag("products");
+revalidateTag("payment-info");
 ```
 
 ---
@@ -269,7 +269,13 @@ Only "products" related cache update হবে
 import { revalidatePath } from "next/cache";
 
 revalidatePath("/products");
+
 ```
+এটি হলো সবচেয়ে সহজ পদ্ধতি। তুমি নেক্সট জেএস-কে বলো— "এই নির্দিষ্ট ইউআরএল বা রাস্তার ক্যাশটা মুছে ফেলো।"
+
+👉 কীভাবে কাজ করে: তুমি যখন revalidatePath('/products') কল করো, তখন ওই পেজের যত ক্যাশ ডাটা আছে সব মুছে যায় এবং পরবর্তী ইউজার একদম ফ্রেশ ডাটা পায়।
+
+👉 কখন ব্যবহার করবে: ধরো তুমি একটা নতুন প্রোডাক্ট এড করেছ। এখন তুমি চাও তোমার /products পেজটা আপডেট হোক। তখন তুমি জাস্ট ওই পেজের পাথ বা রাস্তাটা রিভ্যালিডেট করে দাও।
 
 ---
 
