@@ -6,12 +6,12 @@
 
 👉 Understand Next.js data system deeply:
 
-* Request Memoization vs Cache
-* Data Cache system
-* Revalidation system
-* Advanced caching (tag, path)
-* React vs Next.js difference
-* Security & Server advantages
+- Request Memoization vs Cache
+- Data Cache system
+- Revalidation system
+- Advanced caching (tag, path)
+- React vs Next.js difference
+- Security & Server advantages
 
 ---
 
@@ -60,9 +60,9 @@ await fetch("https://api.com/products");
 
 ## 🧠 কোথায় কাজ করে?
 
-* Server Component
-* generateMetadata
-* layout / page
+- Server Component
+- generateMetadata
+- layout / page
 
 ---
 
@@ -80,7 +80,7 @@ await fetch("https://api.com/products");
 
 | Feature      | React | Next.js |
 | ------------ | ----- | ------- |
-| Auto memoize | ❌     | ✔️      |
+| Auto memoize | ❌    | ✔️      |
 
 ---
 
@@ -97,7 +97,7 @@ await fetch("https://api.com/products");
 ## ⚙️ Default Behavior
 
 ```javascript
-fetch(url)
+fetch(url);
 ```
 
 👉 internally:
@@ -119,8 +119,8 @@ cache = "force-cache"
 
 ## 🧠 কোথায় store হয়?
 
-* Server (Vercel / Node runtime)
-* CDN layer
+- Server (Vercel / Node runtime)
+- CDN layer
 
 ---
 
@@ -181,7 +181,7 @@ fetch(url, { cache: "no-store" });
 
 ```javascript
 fetch(url, {
-  next: { revalidate: 10 }
+  next: { revalidate: 10 },
 });
 ```
 
@@ -222,7 +222,7 @@ fetch(url, {
 
 ```javascript
 fetch(url, {
-  next: { tags: ["products"] }
+  next: { tags: ["products"] },
 });
 ```
 
@@ -248,9 +248,9 @@ Only "products" related cache update হবে
 
 ## ⚡ Use Case
 
-* Admin panel update
-* CMS update
-* Product change
+- Admin panel update
+- CMS update
+- Product change
 
 ---
 
@@ -293,7 +293,7 @@ const data = await fetch(url);
 ## ❌ React (old way)
 
 ```javascript
-useEffect + useState
+useEffect + useState;
 ```
 
 ---
@@ -357,10 +357,7 @@ API key leak risk ❌
 ## 🟢 Parallel
 
 ```javascript
-const [a, b] = await Promise.all([
-  fetch("/a"),
-  fetch("/b")
-]);
+const [a, b] = await Promise.all([fetch("/a"), fetch("/b")]);
 ```
 
 ---
@@ -389,12 +386,12 @@ Sequential = Slow
 
 | Feature          | React | Next.js |
 | ---------------- | ----- | ------- |
-| Auto memoization | ❌     | ✔️      |
-| Server fetch     | ❌     | ✔️      |
-| Persistent cache | ❌     | ✔️      |
-| Revalidation     | ❌     | ✔️      |
-| Tag system       | ❌     | ✔️      |
-| Secure fetch     | ❌     | ✔️      |
+| Auto memoization | ❌    | ✔️      |
+| Server fetch     | ❌    | ✔️      |
+| Persistent cache | ❌    | ✔️      |
+| Revalidation     | ❌    | ✔️      |
+| Tag system       | ❌    | ✔️      |
+| Secure fetch     | ❌    | ✔️      |
 
 ---
 
