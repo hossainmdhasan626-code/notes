@@ -1,3 +1,0 @@
-SessionStorage
-Delegation
-map and forEach
